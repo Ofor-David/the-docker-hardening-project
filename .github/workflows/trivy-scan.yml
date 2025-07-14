@@ -1,0 +1,29 @@
+name: Docker Image security scan
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+jobs:
+    trivy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4.2.2
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3.11.1
+              
+            - name: Build docker image
+              run: docker build -t hardening-project-v2 . 
+
+            - name: Install trivy
+              run: | 
+               wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb \
+               sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
+
+            - name: Run trivy scan
+              run: trivy image --exit-code 1 --severity HIGH,CRITICAL hardening-project-v2
+  
