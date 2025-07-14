@@ -26,5 +26,5 @@ jobs:
                 format: 'table'
                 exit-code: '1'
                 ignore-unfixed: true
-                severity: 'CRITICAL,HIGH'
+                severity: 'MEDIUM,CRITICAL,HIGH'
     
