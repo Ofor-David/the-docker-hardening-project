@@ -13,9 +13,14 @@ COPY main.py .
 # Stage 2: Create the final image
 FROM python:3.12-slim
 
+# Create non-root user
+RUN useradd -m appuser
+
 WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY --from=builder /app /app
 
-# ADD run as non-root user
+# Use non-root user
+USER appuser
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
